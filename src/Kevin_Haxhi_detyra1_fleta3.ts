@@ -12,7 +12,6 @@ const pozicionohu = async (pozicion: string): Promise<void> => {
     console.log(`✔︎ Pozicionimi ne ${pozicion} u krye`);
   } catch (error) {
     console.log('✘ Pozicionimi deshtoi!\n\n', error);
-    
     exit(1);
   }
 }
