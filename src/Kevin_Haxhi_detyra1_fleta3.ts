@@ -6,6 +6,7 @@ import fs from 'fs';
 // transformo ne promise based
 const exec = promisify(cp.exec);
 const writeFile = promisify(fs.writeFile);
+const readFile = promisify(fs.readFile);
 
 // funksion qe ben pozicionimin ne direktorine e kerkuar
 const pozicionohu = async (pozicion: string): Promise<void> => {
@@ -55,12 +56,95 @@ const gjeneroManual = async (komande: string): Promise<void> => {
   }
 };
 
+// funksion qe lexon 2 skedare tekst dhe krahason permbajtjen
+const krahasoSkedare = async (
+  adrSkedar1: string,
+  adrSkedar2: string,
+): Promise<void> => {
+  try {
+    const skedar1 = await readFile(adrSkedar1);
+    const skedar2 = await readFile(adrSkedar2);
+    const perputhen = skedar1.equals(skedar2) ? 'perputhen' : 'nuk perputhen';
+    console.log(`✔︎ Krahasimi i skedareve u krye dhe ata ${perputhen}`);
+  } catch (gabim) {
+    console.log(`✘ Krahasimi i skedareve nuk u krye me sukses!\n\n`, gabim);
+    exit(1);
+  }
+}
+
+// funksion qe afishon x rreshtat e pare te nje skedari
+const afishoNgaFillimi = async (
+  numri: number,
+  adrSkedari: string,
+): Promise<void> => {
+  try {
+    const tekstiSkedarit = await readFile(adrSkedari);
+    const rreshtat = tekstiSkedarit.toString().split('\n').slice(0, numri);
+    console.log(`✔︎ ${numri} rreshtat e pare te skedarit:\n`);
+    for (const e of rreshtat) { console.log(e.toString()) }
+  } catch (gabim) {
+    console.log(`✘ Afishimi i rreshtave te skedarit deshtoi!\n\n`, gabim);
+    exit(1);
+  }
+};
+
+// funksion qe afishon x rreshtat e fundit te nje skedari
+const afishoNgaFundi = async (
+  numri: number,
+  adrSkedari: string,
+): Promise<void> => {
+  try {
+    const tekstiSkedarit = await readFile(adrSkedari);
+    const rreshtat = tekstiSkedarit.toString().split('\n').slice(-(numri + 1), -1);
+    console.log(`✔︎ ${numri} rreshtat e fundit te skedarit:\n`);
+    for (const e of rreshtat) { console.log(e.toString()) }
+  } catch (gabim) {
+    console.log(`✘ Afishimi i rreshtave te skedarit deshtoi!\n\n`, gabim);
+    exit(1);
+  }
+};
+
+// funksion qe bashkon permbajtjen e dy skedareve dhe e afishon ate
+const bashkoSkedare = async (
+  adrSkedar1: string,
+  adrSkedar2: string,
+): Promise<void> => {
+  try {
+    const emriSk1 = adrSkedar1.split('/')[2].split('.')[0];
+    const emriSk2 = adrSkedar2.split('/')[2].split('.')[0];
+    const skedar1 = await readFile(adrSkedar1);
+    const skedar2 = await readFile(adrSkedar2);
+    const bashkimiSkedareve = `
+      ${skedar1}
+      \n================================================================================
+      \n================================================================================
+      \n\n${skedar2}
+    `;
+    await writeFile(`src/assets/${emriSk1}_${emriSk2}.txt`, bashkimiSkedareve, {
+      flag: 'w',
+      encoding: 'utf-8',
+    });
+    console.log(`✔︎ Skedaret u bashkuan dhe gjeneruan '${emriSk1}_${emriSk2}.txt'`);
+
+  } catch (gabim) {
+    console.log(`✘ Afishimi i rreshtave te skedarit deshtoi!\n\n`, gabim);
+    exit(1);
+  }
+};
+
 const fleta3 = async (): Promise<void> => {
   await pozicionohu(`$HOME`);
   await printoDateDheOre();
   await gjejVendndodhjen('ssh');
   await gjeneroManual('more');
   await gjeneroManual('less');
+  await krahasoSkedare('src/assets/more.txt', 'src/assets/less.txt');
+  console.log();
+  await afishoNgaFillimi(5, 'src/assets/more.txt');
+  console.log();
+  await afishoNgaFundi(5, 'src/assets/less.txt');
+  console.log();
+  await bashkoSkedare('src/assets/more.txt', 'src/assets/less.txt');
 };
 
 export default fleta3;
