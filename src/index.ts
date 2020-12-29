@@ -1,4 +1,4 @@
-import Colors, { bgBlue } from 'colors/safe';
+import Colors from 'colors/safe';
 
 import fleta3 from './Kevin_Haxhi_detyra1_fleta3';
 
