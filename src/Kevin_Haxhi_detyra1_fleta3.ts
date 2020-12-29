@@ -8,7 +8,7 @@ const withPromiseExec = promisify(exec);
 // funksion qe ben pozicionimin ne direktorine e kerkuar
 const pozicionohu = async (pozicion: String): Promise<void> => {
   try {
-    const { stdout } = await withPromiseExec(`cd ${pozicion}`);
+    await withPromiseExec(`cd ${pozicion}`);
     console.log(`✔︎ Pozicionimi ne ${pozicion} u krye`);
   } catch (error) {
     console.log('✘ Pozicionimi deshtoi!\n\n', error);
