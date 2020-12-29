@@ -6,7 +6,7 @@ import { promisify } from 'util';
 const withPromiseExec = promisify(exec);
 
 // funksion qe ben pozicionimin ne direktorine e kerkuar
-const pozicionohu = async (pozicion: String): Promise<void> => {
+const pozicionohu = async (pozicion: string): Promise<void> => {
   try {
     await withPromiseExec(`cd ${pozicion}`);
     console.log(`✔︎ Pozicionimi ne ${pozicion} u krye`);
