@@ -114,8 +114,7 @@ const bashkoSkedare = async (
     const emriSk2 = adrSkedar2.split('/')[2].split('.')[0];
     const skedar1 = await readFile(adrSkedar1);
     const skedar2 = await readFile(adrSkedar2);
-    const bashkimiSkedareve = `
-      ${skedar1}
+    const bashkimiSkedareve = `${skedar1}
       \n================================================================================
       \n================================================================================
       \n\n${skedar2}
